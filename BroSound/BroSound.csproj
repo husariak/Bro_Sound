@@ -16,10 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\..\..\..\OneDrive\Pulpit\Audacity\BroAudio\LICENSE.txt">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
+    
   </ItemGroup>
 
 </Project>
