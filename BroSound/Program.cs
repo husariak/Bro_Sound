@@ -16,6 +16,22 @@ namespace BroSound
         [STAThread]
         static void Main(string[] args)
         {
+            {
+                string[] mainFolder = Directory.GetDirectories(Environment.CurrentDirectory);
+                if (!mainFolder.Any(a => a.EndsWith("External")))
+                {
+                    Directory.CreateDirectory(Environment.CurrentDirectory + "\\External");
+                }
+                if (!mainFolder.Any(a => a.EndsWith("Sounds")))
+                {
+                    Directory.CreateDirectory(Environment.CurrentDirectory + "\\Sounds");
+                }
+            }
+            
+
+
+
+
 
             Raylib.InitWindow(1000, 1000, "BroSound");
             Raylib.SetWindowState(ConfigFlags.AlwaysRunWindow);
