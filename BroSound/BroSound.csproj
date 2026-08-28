@@ -8,7 +8,6 @@
     <UseWindowsForms>True</UseWindowsForms>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <SignAssembly>False</SignAssembly>
-    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
   </PropertyGroup>
 
   <ItemGroup>
