@@ -54,7 +54,7 @@ namespace BroSound
             Texture2D NextButtonTexture = Raylib.LoadTexture(Environment.CurrentDirectory + "\\Buttons" + "\\Next.png");
             Texture2D PlusButtonTexture = Raylib.LoadTexture(Environment.CurrentDirectory + "\\Buttons" + "\\Plus.png");
             ButtonList ListWithButtons = new ButtonList();
-            var Camera = new Camera2D() { Target = new System.Numerics.Vector2(0, 0), Rotation = 0 };
+            //var Camera = new Camera2D() { Target = new System.Numerics.Vector2(0, 0), Rotation = 0 };
             AllocatedFile[] Files = new AllocatedFile[0];
             GetFiles(ref Files);
             int music = 0;
@@ -154,10 +154,8 @@ namespace BroSound
                 }
                 Raylib.BeginDrawing();
 
-                Raylib.ClearBackground(Raylib_cs.Color.Gold);
-                Raylib.BeginMode2D(Camera);
-                Raylib.EndMode2D();
-
+                Raylib.ClearBackground(Raylib_cs.Color.Gold); 
+                
                 text.WriteText(musicTitle, 1, Raylib_cs.Color.Blue, new System.Numerics.Vector2(Raylib.GetScreenWidth() * 0.5f, Raylib.GetScreenHeight() * 0.5f), out Program.MixOut);
                 if (Raylib.IsMusicStreamPlaying(currentSound))
                 {
