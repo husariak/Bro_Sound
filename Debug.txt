@@ -1,0 +1,127 @@
+using Raylib_cs;
+using SharpHook;
+using SharpHook.Data;
+using System;
+using System.Diagnostics;
+using System.IO;
+class Program
+{
+    static void Main(string[] args)
+    {
+        Raylib.InitWindow(800, 600, "BroSound");
+        Raylib.InitAudioDevice();
+        Raylib.SetTargetFPS(60);
+        Text text = new Text(Environment.CurrentDirectory + "\\Fonts");
+        var Camera = new Camera2D() { Target = new System.Numerics.Vector2(0, 0), Rotation = 0 };
+        string[] Files = Directory.GetFiles(Environment.CurrentDirectory + "\\Sounds");
+        Sound[] Sounds = new Sound[Files.Length];
+        var hook = new SharpHook.TaskPoolGlobalHook();
+        hook.RunAsync();
+        for (int i = 0; i < Files.Length; i++)
+        {
+            Sounds[i] = Raylib.LoadSound(Files[i]);
+        }
+        int music = 0;
+        Raylib.PlaySound(Sounds[music]);
+        if (hook.IsRunning)
+        {
+            hook.KeyPressed += (sender, e) =>
+            {
+                if (e.Data.KeyCode == KeyCode.VcMediaNext)
+                {
+                    Raylib.StopSound(Sounds[music]);
+                    music += 1;
+                    if (music >= Sounds.Length)
+                    {
+                        music = 0;
+                    }
+                    Raylib.PlaySound(Sounds[music]);
+                    Console.WriteLine("Next");
+                }
+                if (e.Data.KeyCode == KeyCode.VcMediaPlay)
+                {
+                    if(Raylib.IsSoundPlaying(Sounds[music]))
+                    {
+                        Raylib.PauseSound(Sounds[music]);
+                        Console.WriteLine("Pause");
+                    }
+                    else
+                    {
+                        Raylib.ResumeSound(Sounds[music]);
+                        Console.WriteLine("Resume");
+                    }                   
+                }
+            };
+        }
+        while (!Raylib.WindowShouldClose())
+        {
+            Raylib.BeginDrawing();
+
+            Raylib.ClearBackground(Color.White);
+            Raylib.BeginMode2D(Camera);
+
+            Raylib.EndMode2D();
+            text.WriteText(Files[music].Remove(0, Files[music].LastIndexOf("\\") + 1), 1, Color.Blue, new System.Numerics.Vector2(Raylib.GetScreenWidth() * 0.5f, Raylib.GetScreenHeight() * 0.5f));
+            
+
+
+
+            Raylib.EndDrawing();
+        }
+        Raylib.CloseAudioDevice();
+        Raylib.CloseWindow();
+    }
+}
+class Text
+{
+    List<Letter> letters = new List<Letter>();
+    public Text(string path)
+    {
+        foreach (var file in Directory.GetFiles(path))
+        {
+            letters.Add(new Letter(file.Remove(0, file.LastIndexOf("\\") + 1).Replace(".png", ""), Raylib.LoadTexture(file)));
+        }
+
+    }
+    public void WriteText(string text, float scale, Color color, System.Numerics.Vector2 Pos)
+    {
+        int XMove = (int)((-text.Length * 0.5f) * 43 * scale);
+        text = text.ToUpper();
+        if((Pos.X + XMove) < 0)
+        {
+            XMove = (int)-Pos.X;
+        }
+        for(int x = 0; x < text.Length; x++)
+        {
+            string letter = text[x].ToString();
+            if (text[x] == ' ')
+            {
+                letter = "Space";
+            }
+        read:;
+            var texture = letters.Where(a => a.Name == letter).FirstOrDefault();
+            if (texture != null)
+            {
+                Raylib.DrawTextureEx(texture.Texture, new System.Numerics.Vector2(Pos.X + XMove, Pos.Y), 0, scale, color);
+                XMove += (int)(43 * scale);
+            }
+            else
+            {
+                letter = "Space";
+                goto read;
+            }
+        }
+       
+        
+    }
+}
+class Letter
+{
+    public Letter(string name, Texture2D texture)
+    {
+        Name = name;
+        Texture = texture;
+    }
+    public string Name { get; set; }
+    public Texture2D Texture { get; set; }
+}
